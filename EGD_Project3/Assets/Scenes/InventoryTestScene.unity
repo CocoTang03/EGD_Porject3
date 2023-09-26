@@ -359,6 +359,7 @@ MonoBehaviour:
   - {fileID: 8756867514607504328, guid: 6ddd00cc4254afa45982d85ab3606b19, type: 3}
   canvasCamera: {fileID: 550081020}
   itemsParent: {fileID: 1359489074}
+  inventoryOpen: 1
 --- !u!1 &550081019
 GameObject:
   m_ObjectHideFlags: 0

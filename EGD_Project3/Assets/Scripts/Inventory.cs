@@ -15,6 +15,7 @@ public class Inventory : MonoBehaviour
     private float itemWidth;
     private float itemHeight;
     private float itemDepth = 2f;
+    private GameObject held;
 
     private GameObject[] totalItems; // 
     private GameObject[] itemsShown;
@@ -58,6 +59,8 @@ public class Inventory : MonoBehaviour
                 if (inventoryOpen)
                 {
                     Debug.Log(itemSelected(i).name);
+
+                    holdItem(itemSelected(i));
                 }
             }
         }
@@ -83,6 +86,16 @@ public class Inventory : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void holdItem(GameObject item)
+    {
+        if(held != null) { Destroy(held); }
+        held = Instantiate(item, 
+            GameObject.Find("Player").transform.position + new Vector3(1.81f, 1.5f,0.54f), 
+            Quaternion.Euler(-20.58f,-125.7f,0));
+        held.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+        held.layer = 0;
     }
 
     public void itemsDisplayUpdate()

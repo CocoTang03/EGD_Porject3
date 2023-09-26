@@ -5,10 +5,7 @@ using UnityEngine;
 public class Rotator : MonoBehaviour
 {
     [SerializeField] private float rotateSpeed = 50f;
-    [SerializeField] private float smoothTime = 0.1f;
 
-    private Vector3 currentRotation;
-    private Vector3 smoothVelocity = Vector3.zero;
     // Start is called before the first frame update
     void Start()
     {

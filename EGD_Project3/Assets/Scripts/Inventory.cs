@@ -10,18 +10,20 @@ public class Inventory : MonoBehaviour
     private int itemsNumMax = 8;
     private float itemWidth;
 
-    private float itemHeight = 20f;
-    private float itemDepth = 0f;
+    private float itemHeight;
+    private float itemDepth = 1f;
 
 
     //private Vector3 itemDefaultPosition = new Vector3(0f, 10f, 10f);
     // Start is called before the first frame update
     void Start()
     {
+        Canvas canvas = GetComponentInParent<Canvas>();
         //Debug.Log(Screen.width);
         //Instantiate items and put them into the array
         //itemsParent = new GameObject("itemsParent");
-        itemWidth = Screen.width / itemsNumMax;
+        itemWidth = canvas.pixelRect.width / itemsNumMax;
+        itemHeight = canvas.pixelRect.height / itemsNumMax;
         //Debug.Log(itemWidth);
         //itemDefaultPosition = new Vector3(itemWidth, Screen.height /2, 10f);
         //itemDefaultPosition = canvasCamera.ScreenToWorldPoint(itemDefaultPosition);
@@ -40,11 +42,11 @@ public class Inventory : MonoBehaviour
         Vector3 nextItemPos = new Vector3(itemWidth / 2, itemHeight, itemDepth);
         foreach (GameObject item in items)
         {
-            nextItemPos += new Vector3(itemWidth, 0f, 0f);
             Vector3 worldPos = canvasCamera.ScreenToWorldPoint(nextItemPos);
             //worldPos.z = 10f;
             Instantiate(item, worldPos, Quaternion.identity, itemsParent.transform);
             Debug.Log(canvasCamera.WorldToScreenPoint(worldPos));
+            nextItemPos += new Vector3(itemWidth, 0f, 0f);
         }
     }
 

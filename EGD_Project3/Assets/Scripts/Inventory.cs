@@ -2,19 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class Inventory : MonoBehaviour
 {
-    public GameObject[] items;
+    public GameObject[] items; // const
     public Camera canvasCamera;
     public GameObject itemsParent;
+
+    public bool inventoryOpen = false;
     private int itemsNumMax = 9;
     private float itemWidth;
-
-    public bool inventoryOpen = true;
     private float itemHeight;
     private float itemDepth = 2f;
 
+    private GameObject[] totalItems; // 
     private GameObject[] itemsShown;
 
     //private Vector3 itemDefaultPosition = new Vector3(0f, 10f, 10f);
@@ -25,9 +27,10 @@ public class Inventory : MonoBehaviour
         itemWidth = canvas.pixelRect.width / itemsNumMax;
         itemHeight = canvas.pixelRect.height / itemsNumMax;
 
+        totalItems = items;
         itemsShown = new GameObject[itemsNumMax];
         //Debug.Log(items[0].name);
-        itemsDisplay();
+        itemsDisplay(items);
     }
 
     // Update is called once per frame
@@ -42,25 +45,43 @@ public class Inventory : MonoBehaviour
             }
             else openInventory();
         }
-    }
-
-    private void FixedUpdate()
-    {
-
-
-    }
-
-    public void itemsDisplay()
-    {
-        int index = 0;
-        Vector3 nextItemPos = new Vector3(itemWidth / 2, itemHeight, itemDepth);
-        foreach (GameObject item in items)
+        else if(Input.GetMouseButtonDown(1))
         {
-            Vector3 worldPos = canvasCamera.ScreenToWorldPoint(nextItemPos);
-            itemsShown[index] = Instantiate(item, worldPos, Quaternion.Euler(0, 180, 0), itemsParent.transform);
-            nextItemPos += new Vector3(itemWidth, 0f, 0f);
-            index++;
-            if (index >= itemsNumMax) break;
+            //Debug.Log("Right button down");
+
+        }
+        for(int i = 0; i <= 9; i++)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+            {
+                Debug.Log("Number key" + i + "is pressed");
+                if (inventoryOpen)
+                {
+                    Debug.Log(itemSelected(i).name);
+                }
+            }
+        }
+    }
+
+    public void itemsDisplay(GameObject[] items)
+    {
+        int index;
+        Vector3 nextItemPos = new Vector3(itemWidth / 2, itemHeight, itemDepth);
+        for(index = 0; index < itemsNumMax; index++)
+        {
+            if (items[index] != null)
+            {
+                Vector3 worldPos = canvasCamera.ScreenToWorldPoint(nextItemPos);
+                itemsShown[index] = Instantiate(items[index], worldPos, Quaternion.Euler(0, 180, 0), itemsParent.transform);
+                nextItemPos += new Vector3(itemWidth, 0f, 0f);
+            }
+            else
+            {
+                if (itemsShown[index] != null)
+                {
+                    Destroy(itemsShown[index]);
+                }
+            }
         }
     }
 
@@ -77,7 +98,7 @@ public class Inventory : MonoBehaviour
     public void openInventory()
     {
         GetComponent<Image>().enabled = true;
-        itemsDisplay();
+        itemsDisplay(totalItems);
         inventoryOpen = true;
     }
 
@@ -89,5 +110,10 @@ public class Inventory : MonoBehaviour
             Destroy(item);
         }
         inventoryOpen = false;
+    }
+
+    public GameObject itemSelected(int index)
+    {
+        return itemsShown[index];
     }
 }

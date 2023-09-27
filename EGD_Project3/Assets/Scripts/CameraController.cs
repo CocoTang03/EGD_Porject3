@@ -51,7 +51,7 @@ public class CameraController : MonoBehaviour
             //Debug.Log(hit.collider.name);
             if(hit.collider.tag == "itemPosition")
             {
-                //hit.collider.GetComponent<script>().func;
+                hit.collider.GetComponent<Test_placement>().func;
             }
         }
 

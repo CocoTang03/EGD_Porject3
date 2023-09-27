@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Test_placement : MonoBehaviour
 {
-    public GameObject targetObject; // Object to put in case
+    //public GameObject targetObject; // Object to put in case
+    public bool occupied = false;
 
-    private void Start()
+    public void MoveObject(GameObject targetObject)
     {
         if (targetObject != null)
         {
@@ -16,19 +17,7 @@ public class Test_placement : MonoBehaviour
             // For combined bounds of all the meshes in the targetObject
             Bounds combinedBounds = new Bounds(targetObject.transform.position, Vector3.zero);
 
-            // Logic for dealing with objects with child meshes
-            if (targetObject.transform.childCount > 0)
-            {
-                MeshFilter[] mfs = targetObject.GetComponentsInChildren<MeshFilter>();
-
-                foreach (MeshFilter mf in mfs)
-                {
-                    combinedBounds.Encapsulate(mf.mesh.bounds);
-                }
-            }
-            // Logic for ferris wheel
-            else
-                combinedBounds.Encapsulate(targetObject.GetComponent<MeshFilter>().mesh.bounds);
+            combinedBounds.Encapsulate(targetObject.GetComponent<MeshFilter>().mesh.bounds);
 
             // Recalculate object size
             Vector3 scaleFactor = Vector3.one;
@@ -42,7 +31,14 @@ public class Test_placement : MonoBehaviour
                 scaleFactor.z = cubeSize.z / denominator;
             }
 
+            GameObject newObject = Instantiate(targetObject, transform.position, transform.rotation) as GameObject;  // instatiate the object
+            newObject.transform.localScale = scaleFactor; // change its local scale in x y z forma
+
             // Rescaling and positioning
+            //targetObject.transform.localScale = scaleFactor;
+            //targetObject.transform.position = transform.position;
+
+            occupied = true;
             targetObject.transform.localScale = scaleFactor;
             targetObject.transform.position = transform.position;
         }

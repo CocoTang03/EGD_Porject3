@@ -6,6 +6,7 @@ public class Rotator : MonoBehaviour
 {
     [SerializeField] private float rotateSpeed = 50f;
 
+    public float horizontalInput;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,7 +16,9 @@ public class Rotator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(0f, rotateSpeed * Time.deltaTime, 0f, Space.Self);
+        horizontalInput = Input.GetAxis("Mouse X");
+        horizontalInput *= -1f;
+        transform.Rotate(0f, rotateSpeed * Time.deltaTime* horizontalInput, 0f, Space.Self);
     }
 
 

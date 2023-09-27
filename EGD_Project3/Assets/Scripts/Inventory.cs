@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
+//using static UnityEditor.Progress;
 
 public class Inventory : MonoBehaviour
 {
@@ -20,6 +20,9 @@ public class Inventory : MonoBehaviour
 
     public List<string> totalItems; // 
     public List<GameObject> itemsShown;
+
+    public GameObject detailModel;
+    GameObject detailedItem;
 
     //private Vector3 itemDefaultPosition = new Vector3(0f, 10f, 10f);
     // Start is called before the first frame update
@@ -58,8 +61,10 @@ public class Inventory : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Space))
         {
             // Details
-            if(!inventoryOpen && held != null)
+            if(held != null)
             {
+                if (detailedItem != null) HideDetail();
+                else ShowDetail();
 
             }
         }
@@ -88,7 +93,7 @@ public class Inventory : MonoBehaviour
             if (totalItems[index] != null)
             {
                 Vector3 worldPos = canvasCamera.ScreenToWorldPoint(nextItemPos);
-                Debug.Log(getItemByName(totalItems[index]).name);
+                //Debug.Log(getItemByName(totalItems[index]).name);
                 itemsShown.Add(Instantiate(getItemByName(totalItems[index]), worldPos, Quaternion.Euler(0, 180, 0), itemsParent.transform));
                 nextItemPos += new Vector3(itemWidth, 0f, 0f);
             }
@@ -170,6 +175,7 @@ public class Inventory : MonoBehaviour
 
     public void closeInventory()
     {
+        if (!inventoryOpen) return;
         GetComponent<Image>().enabled = false;
         foreach (GameObject item in itemsShown)
         {
@@ -248,5 +254,42 @@ public class Inventory : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public void ShowDetail()
+    {
+        detailModel.GetComponent<Image>().enabled = true;
+        Canvas canvas = GetComponentInParent<Canvas>();
+        itemWidth = canvas.pixelRect.width / 2;
+        itemHeight = canvas.pixelRect.height / 2;
+        Vector3 showPos = new Vector3(itemWidth, itemHeight, itemDepth/2);
+        showPos = canvasCamera.ScreenToWorldPoint(showPos);
+        detailedItem = Instantiate(
+            getItemByName(held.name), 
+            showPos,
+            Quaternion.Euler(0,180,0),
+            detailModel.transform);
+        detailedItem.transform.localScale *= 5;
+        detailedItem.AddComponent<Rotator>();
+        closeInventory();
+        MeshRenderer[] meshes = held.GetComponentsInChildren<MeshRenderer>();
+        foreach (MeshRenderer mesh in meshes)
+        {
+            mesh.enabled = false;
+        }
+        GameObject.Find("Camera").GetComponent<CameraController>().enabled = false;
+    }
+
+    public void HideDetail()
+    {
+        Destroy( detailedItem );
+        detailModel.GetComponent<Image>().enabled = false;
+        GameObject.Find("Camera").GetComponent<CameraController>().enabled = true;
+
+        MeshRenderer[] meshes = held.GetComponentsInChildren<MeshRenderer>();
+        foreach (MeshRenderer mesh in meshes)
+        {
+            mesh.enabled = true;
+        }
     }
 }

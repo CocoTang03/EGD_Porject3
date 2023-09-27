@@ -14,12 +14,15 @@ public class CameraController : MonoBehaviour
 
     private Vector3 currentRotation;
     private Vector3 smoothVelocity = Vector3.zero;
-
+    private Camera playCam;
+    private float range = 10f;
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        playCam = GetComponent<Camera>();
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -36,6 +39,20 @@ public class CameraController : MonoBehaviour
 
         transform.localEulerAngles = currentRotation;
         orientation.rotation = Quaternion.Euler(0,rotationY,0);
+
+    }
+
+    private void Update()
+    {
+        Vector3 rayOrigin = playCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
+        RaycastHit hit;
+        if(Physics.Raycast(rayOrigin,playCam.transform.forward, out hit, range)) 
+        {
+            if(hit.collider.tag == "itemPosition")
+            {
+                //hit.collider.GetComponent<script>().func;
+            }
+        }
 
     }
 }

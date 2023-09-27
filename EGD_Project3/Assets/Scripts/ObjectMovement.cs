@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using static UnityEditor.PlayerSettings;
 
 public class ObjectMovement : MonoBehaviour
@@ -14,10 +15,16 @@ public class ObjectMovement : MonoBehaviour
     private bool detailedItemOnScreen = false;
     Canvas canvas;
     Vector3 detailedPos;
+
+    public Camera playerCamera;
+    public Transform orientation;
+    Vector3 moveDirection;
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.Find("Player");
+        playerCamera = GameObject.Find("Camera").GetComponent<Camera>();
+        orientation = GameObject.Find("Orientation").transform;
         //canvas = GetComponentInParent<Canvas>();
         //detailedPos = new Vector3(canvas.pixelRect.width / 2, canvas.pixelRect.height / 2, 2f);
 
@@ -29,6 +36,9 @@ public class ObjectMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        moveDirection = orientation.forward*1.452f + orientation.right*0.229f;
+        moveDirection.y = 2.5f;
+        transform.position = moveDirection;
         if (Input.GetMouseButtonDown(1))
         {
             if(prefab == null) zoomIn();

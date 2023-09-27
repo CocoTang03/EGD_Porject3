@@ -15,7 +15,7 @@ public class Inventory : MonoBehaviour
     private float itemWidth;
     private float itemHeight;
     private float itemDepth = 2f;
-    private GameObject held;
+    public GameObject held;
 
     private GameObject[] totalItems; // 
     private GameObject[] itemsShown;
@@ -53,14 +53,14 @@ public class Inventory : MonoBehaviour
         }
         for(int i = 0; i <= 9; i++)
         {
-            if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+            if (Input.GetKeyDown(KeyCode.Alpha0 + i ))
             {
                 Debug.Log("Number key" + i + "is pressed");
                 if (inventoryOpen)
                 {
-                    Debug.Log(itemSelected(i).name);
+                    Debug.Log(itemSelected(i-1).name);
 
-                    holdItem(itemSelected(i));
+                    holdItem(itemSelected(i - 1));
                 }
             }
         }
@@ -91,11 +91,12 @@ public class Inventory : MonoBehaviour
     public void holdItem(GameObject item)
     {
         if(held != null) { Destroy(held); }
-        held = Instantiate(item, 
-            GameObject.Find("Player").transform.position + new Vector3(1.81f, 1.5f,0.54f), 
-            Quaternion.Euler(-20.58f,-125.7f,0));
+
+        held = Instantiate(item, GameObject.Find("Player").transform);
         held.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
         held.layer = 0;
+        held.AddComponent<ObjectMovement>();
+        held.GetComponent<BoxCollider>().enabled = false;
     }
 
     public void itemsDisplayUpdate()

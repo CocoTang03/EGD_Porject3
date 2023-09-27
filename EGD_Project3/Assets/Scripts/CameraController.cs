@@ -66,8 +66,10 @@ public class CameraController : MonoBehaviour
                             child2.gameObject.layer = 0;
                         }
                     }
+                    // held_obj.GetComponent<AudioSource>().Play();
                     hit.collider.GetComponent<Test_placement>().MoveObject(held_obj);
                     held_obj.SetActive(true);
+
 
                     GameObject.Find("Background").GetComponent<Inventory>().RemoveFromInventory(held_obj);
                     Destroy(held_obj);

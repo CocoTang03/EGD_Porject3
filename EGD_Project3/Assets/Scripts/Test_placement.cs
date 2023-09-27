@@ -6,7 +6,7 @@ public class Test_placement : MonoBehaviour
 {
     //public GameObject targetObject; // Object to put in case
     public bool occupied = false;
-
+    public GameObject newObject;
     public void MoveObject(GameObject targetObject)
     {
         if (targetObject != null)
@@ -36,7 +36,7 @@ public class Test_placement : MonoBehaviour
                 scaleFactor.z = cubeSize.z / denominator;
             }
 
-            GameObject newObject = Instantiate(targetObject, transform.position, transform.rotation) as GameObject;  // instatiate the object
+            newObject = Instantiate(targetObject, transform.position, transform.rotation) as GameObject;  // instatiate the object
             newObject.transform.localScale = scaleFactor; // change its local scale in x y z forma
 
             // Rescaling and positioning

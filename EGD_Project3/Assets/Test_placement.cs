@@ -4,47 +4,32 @@ using UnityEngine;
 
 public class Test_placement : MonoBehaviour
 {
-    public GameObject targetObject; // Object to put in case
+    public GameObject targetObject; // Assign the target GameObject in the Inspector
 
-    private void Start()
+    private void Update()
     {
         if (targetObject != null)
         {
             // Rotate the targetObject to match the rotation of the invisible cube
             targetObject.transform.rotation = transform.rotation;
 
-            // For combined bounds of all the meshes in the targetObject
-            Bounds combinedBounds = new Bounds(targetObject.transform.position, Vector3.zero);
-
-            // Logic for dealing with objects with child meshes
-            if (targetObject.transform.childCount > 0)
-            {
-                MeshFilter[] mfs = targetObject.GetComponentsInChildren<MeshFilter>();
-
-                foreach (MeshFilter mf in mfs)
-                {
-                    combinedBounds.Encapsulate(mf.mesh.bounds);
-                }
-            }
-            // Logic for ferris wheel
-            else
-                combinedBounds.Encapsulate(targetObject.GetComponent<MeshFilter>().mesh.bounds);
-
-            // Recalculate object size
+            // Calculate the scale factor to fit the original bounds within the invisible cube
             Vector3 scaleFactor = Vector3.one;
             Vector3 cubeSize = transform.localScale;
-            float denominator = Mathf.Min(combinedBounds.size.x, combinedBounds.size.y, combinedBounds.size.z);
 
             if (cubeSize.x > 0 && cubeSize.y > 0 && cubeSize.z > 0)
             {
-                scaleFactor.x = cubeSize.x / denominator;
-                scaleFactor.y = cubeSize.y / denominator;
-                scaleFactor.z = cubeSize.z / denominator;
+                // Calculate a uniform scale factor based on the maximum scale component
+                float maxScaleComponent = Mathf.Max(targetObject.transform.localScale.x, targetObject.transform.localScale.y, targetObject.transform.localScale.z);
+                scaleFactor = Vector3.one * (maxScaleComponent / Mathf.Max(cubeSize.x, cubeSize.y, cubeSize.z));
             }
 
-            // Rescaling and positioning
-            targetObject.transform.localScale = scaleFactor;
-            targetObject.transform.position = transform.position;
+            // Calculate the position offset based on the original object's position
+            Vector3 offset = (targetObject.transform.localScale - Vector3.one) * 0.5f;
+
+            // Position the targetObject relative to the center of the invisible cube
+            targetObject.transform.position = transform.position + offset;
         }
     }
+
 }

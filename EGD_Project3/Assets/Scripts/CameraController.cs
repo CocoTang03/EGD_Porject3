@@ -17,6 +17,8 @@ public class CameraController : MonoBehaviour
     private Camera playCam;
     private float range = 10f;
 
+    List<GameObject> used_objects = new List<GameObject>();
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -48,10 +50,22 @@ public class CameraController : MonoBehaviour
         RaycastHit hit;
         if(Physics.Raycast(rayOrigin,playCam.transform.forward, out hit, range)) 
         {
-            //Debug.Log(hit.collider.name);
-            if(hit.collider.tag == "itemPosition")
+            Debug.Log(hit.collider.name);
+            if(hit.collider.tag == "itemPosition" && !hit.collider.GetComponent<Test_placement>().occupied)
             {
+<<<<<<< Updated upstream
                 //hit.collider.GetComponent<script>().func;
+=======
+                GameObject held_obj = GameObject.Find("Background").GetComponent<Inventory>().held;
+                if (!used_objects.Contains(held_obj))
+                {
+                    used_objects.Add(held_obj);
+                    held_obj.layer = 0;
+                    hit.collider.GetComponent<Test_placement>().MoveObject(held_obj);
+                    held_obj.SetActive(true);
+                }
+                   
+>>>>>>> Stashed changes
             }
         }
 

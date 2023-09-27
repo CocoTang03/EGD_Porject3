@@ -46,14 +46,19 @@ public class CameraController : MonoBehaviour
     {
         Vector3 rayOrigin = playCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
         RaycastHit hit;
-        if(Physics.Raycast(rayOrigin,playCam.transform.forward, out hit, range)) 
+
+
+        if (Physics.Raycast(rayOrigin, playCam.transform.forward, out hit, range))
         {
-            //Debug.Log(hit.collider.name);
-            if(hit.collider.tag == "itemPosition")
+            Debug.Log(hit.collider.name);
+            if (hit.collider.tag == "itemPosition" && !hit.collider.GetComponent<Test_placement>().occupied)
             {
-                //hit.collider.GetComponent<script>().func;
+                print("!!! me");
+                GameObject held_obj = GameObject.Find("Background").GetComponent<Inventory>().held;
+                held_obj.layer = 0;
+                hit.collider.GetComponent<Test_placement>().MoveObject(held_obj);
+                held_obj.SetActive(true);
             }
         }
-
     }
 }

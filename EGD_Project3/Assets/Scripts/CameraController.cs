@@ -70,12 +70,19 @@ public class CameraController : MonoBehaviour
                     hit.collider.GetComponent<Test_placement>().MoveObject(held_obj);
                     held_obj.SetActive(true);
 
-
+                    SoundPutItems(held_obj, hit.collider.gameObject);
                     GameObject.Find("Background").GetComponent<Inventory>().RemoveFromInventory(held_obj);
                     Destroy(held_obj);
                 }
 
             }
         }
+    }
+
+    IEnumerator SoundPutItems(GameObject held, GameObject collider)
+    {
+        collider.GetComponentInParent<AudioSource>().Play();
+        yield return new WaitForSeconds(2);
+        held.GetComponent<AudioSource>().Play();
     }
 }

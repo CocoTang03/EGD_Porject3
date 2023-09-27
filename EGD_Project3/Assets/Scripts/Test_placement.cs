@@ -38,14 +38,27 @@ public class Test_placement : MonoBehaviour
 
             newObject = Instantiate(targetObject, transform.position, transform.rotation) as GameObject;  // instatiate the object
             newObject.transform.localScale = scaleFactor; // change its local scale in x y z forma
+            //SoundPutItems(targetObject, this.gameObject);
 
             // Rescaling and positioning
             //targetObject.transform.localScale = scaleFactor;
             //targetObject.transform.position = transform.position;
-
+            //this.gameObject.GetComponentInParent<AudioSource>().Play();
+            StartCoroutine(SoundPutItems(newObject, this.gameObject));
             occupied = true;
             targetObject.transform.localScale = scaleFactor;
             targetObject.transform.position = transform.position;
         }
+    }
+
+    IEnumerator SoundPutItems(GameObject held, GameObject collider)
+    {
+        Debug.Log(collider.GetComponentInParent<AudioSource>());
+        collider.GetComponentInParent<AudioSource>().Play();
+        yield return new WaitForSeconds(1);
+        Debug.Log(held);
+        held.GetComponent<AudioSource>().Play();
+        yield return new WaitForSeconds(5);
+        held.GetComponent<AudioSource>().Stop();
     }
 }

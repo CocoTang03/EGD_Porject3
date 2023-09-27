@@ -16,7 +16,7 @@ public class CameraController : MonoBehaviour
     private Vector3 smoothVelocity = Vector3.zero;
     private Camera playCam;
     private float range = 5f;
-
+    private GameObject previousCollider;
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -39,7 +39,7 @@ public class CameraController : MonoBehaviour
 
         transform.localEulerAngles = currentRotation;
         orientation.rotation = Quaternion.Euler(0, rotationY, 0);
-
+        previousCollider = null;
     }
 
     private void Update()
@@ -70,7 +70,9 @@ public class CameraController : MonoBehaviour
                     hit.collider.GetComponent<Test_placement>().MoveObject(held_obj);
                     held_obj.SetActive(true);
 
-                    SoundPutItems(held_obj, hit.collider.gameObject);
+                    //Debug.Log(hit.collider.gameObject.GetComponentInParent<AudioSource>());
+                    //SoundPutItems(held_obj, hit.collider.gameObject);
+
                     GameObject.Find("Background").GetComponent<Inventory>().RemoveFromInventory(held_obj);
                     Destroy(held_obj);
                 }
@@ -81,8 +83,10 @@ public class CameraController : MonoBehaviour
 
     IEnumerator SoundPutItems(GameObject held, GameObject collider)
     {
+        Debug.Log(collider.GetComponentInParent<AudioSource>());
         collider.GetComponentInParent<AudioSource>().Play();
         yield return new WaitForSeconds(2);
+        Debug.Log(held);
         held.GetComponent<AudioSource>().Play();
     }
 }

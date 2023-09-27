@@ -12,6 +12,10 @@ public class FrameJudgement : MonoBehaviour
     public GameObject frameFerrisWheel;
     public GameObject frameHockey;
     public GameObject frameFounders;
+
+    public GameObject caseFerris;
+    public GameObject caseHockey;
+    public GameObject caseFounders;
     void Start()
     {
         
@@ -32,6 +36,9 @@ public class FrameJudgement : MonoBehaviour
         if(isCompleted(objFounders, "founder")){
             frameFounders.GetComponent<MeshRenderer>().enabled = true;
         }
+        MuteThemeMusic(caseFerris, objFerriWheels);
+        MuteThemeMusic(caseHockey, objHockeys);
+        MuteThemeMusic(caseFounders, objFounders);
     }
 
     bool isCompleted(GameObject[] objs, string tag)
@@ -43,5 +50,19 @@ public class FrameJudgement : MonoBehaviour
             if(objTag != tag) return false;
         }
         return true;
+    }
+
+    bool CaseEmpty(GameObject[] objs)
+    {
+        foreach (GameObject obj in objs)
+        {
+            if (obj.GetComponent<Test_placement>().occupied) return true;
+        }
+        return false;
+    }
+    void MuteThemeMusic(GameObject obj, GameObject[] objs)
+    {
+        if(CaseEmpty(objs)) obj.GetComponent<AudioSource>().mute = true;
+        else obj.GetComponent<AudioSource>().mute = false;
     }
 }

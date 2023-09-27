@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - itemPosition
+  - ferris
+  - founder
+  - hockey
   layers:
   - Default
   - TransparentFX

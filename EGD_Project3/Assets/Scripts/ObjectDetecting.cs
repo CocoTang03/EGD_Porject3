@@ -7,10 +7,13 @@ public class ObjectDetecting : MonoBehaviour
     List<Collider> framedObjects = new List<Collider>();
     int numFramed;
 
+    public GameObject emptyFrame;
+    private AudioSource frameAudio;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        frameAudio = emptyFrame.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -40,6 +43,19 @@ public class ObjectDetecting : MonoBehaviour
                 framedObjects.Remove(other);
             }
             
+        }
+    }
+
+    public void EmptyFrameAudio()
+    {
+        if (framedObjects.Count != 0)
+        {
+            frameAudio.Stop();
+        }
+
+        else
+        {
+            frameAudio.Play();
         }
     }
 }

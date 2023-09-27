@@ -29,7 +29,7 @@ public class FrameJudgement : MonoBehaviour
         {
             frameHockey.GetComponent<MeshRenderer>().enabled = true;
         }
-        if(isCompleted(objFounders, "founder"){
+        if(isCompleted(objFounders, "founder")){
             frameFounders.GetComponent<MeshRenderer>().enabled = true;
         }
     }

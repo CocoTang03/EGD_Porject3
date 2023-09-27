@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour
     private Vector3 currentRotation;
     private Vector3 smoothVelocity = Vector3.zero;
     private Camera playCam;
-    private float range = 10f;
+    private float range = 5f;
 
     private void Start()
     {
@@ -50,14 +50,29 @@ public class CameraController : MonoBehaviour
 
         if (Physics.Raycast(rayOrigin, playCam.transform.forward, out hit, range))
         {
-            Debug.Log(hit.collider.name);
+            //Debug.Log(hit.collider.name);
             if (hit.collider.tag == "itemPosition" && !hit.collider.GetComponent<Test_placement>().occupied)
             {
-                print("!!! me");
+                Debug.Log(hit.collider.name);
                 GameObject held_obj = GameObject.Find("Background").GetComponent<Inventory>().held;
-                held_obj.layer = 0;
-                hit.collider.GetComponent<Test_placement>().MoveObject(held_obj);
-                held_obj.SetActive(true);
+                if (held_obj != null)
+                {
+                    held_obj.layer = 0;
+                    foreach(Transform child in held_obj.transform)
+                    {
+                        child.gameObject.layer = 0;
+                        foreach(Transform child2 in child.transform)
+                        {
+                            child2.gameObject.layer = 0;
+                        }
+                    }
+                    hit.collider.GetComponent<Test_placement>().MoveObject(held_obj);
+                    held_obj.SetActive(true);
+
+                    GameObject.Find("Background").GetComponent<Inventory>().RemoveFromInventory(held_obj);
+                    Destroy(held_obj);
+                }
+
             }
         }
     }

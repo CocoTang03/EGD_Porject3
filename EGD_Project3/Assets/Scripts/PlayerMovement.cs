@@ -21,8 +21,8 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //rb = GetComponent<Rigidbody>();
-        //rb.freezeRotation = true;
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
         previousPosition = transform.position;
     }
 
@@ -37,7 +37,8 @@ public class PlayerMovement : MonoBehaviour
         moveDirection = orientation.forward*verticalInput + orientation.right*horizontalInput;
 
         //rb.AddForce(moveDirection.normalized * speed, ForceMode.Force);
-        transform.Translate(moveDirection.normalized * speed * Time.deltaTime);
+        //transform.Translate(moveDirection.normalized * speed * Time.deltaTime);
+        rb.velocity = moveDirection.normalized * speed;
 
         float moveDistance = Vector3.Distance(transform.position, previousPosition);
         if (moveDistance >= minMoveDistance)

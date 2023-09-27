@@ -18,7 +18,7 @@ public class Inventory : MonoBehaviour
     private float itemDepth = 2f;
     public GameObject held;
 
-    private GameObject[] totalItems; // 
+    public List<string> totalItems; // 
     public List<GameObject> itemsShown;
 
     //private Vector3 itemDefaultPosition = new Vector3(0f, 10f, 10f);
@@ -29,9 +29,13 @@ public class Inventory : MonoBehaviour
         itemWidth = canvas.pixelRect.width / itemsNumMax;
         itemHeight = canvas.pixelRect.height / itemsNumMax;
 
-        totalItems = items;
+        totalItems = new List<string>();
+        foreach (GameObject item in items)
+        {
+            totalItems.Add(item.name);
+        }
         itemsShown = new List<GameObject>();
-        itemsDisplay(items);
+        itemsDisplay(totalItems);
     }
 
     // Update is called once per frame
@@ -75,16 +79,17 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public void itemsDisplay(GameObject[] items)
+    public void itemsDisplay(List<string> totalItems)
     {
         int index;
         Vector3 nextItemPos = new Vector3(itemWidth / 2, itemHeight, itemDepth);
-        for(index = 0; index < itemsNumMax; index++)
+        for(index = 0; index < totalItems.Count; index++)
         {
-            if (items[index] != null)
+            if (totalItems[index] != null)
             {
                 Vector3 worldPos = canvasCamera.ScreenToWorldPoint(nextItemPos);
-                itemsShown.Add(Instantiate(items[index], worldPos, Quaternion.Euler(0, 180, 0), itemsParent.transform));
+                Debug.Log(getItemByName(totalItems[index]).name);
+                itemsShown.Add(Instantiate(getItemByName(totalItems[index]), worldPos, Quaternion.Euler(0, 180, 0), itemsParent.transform));
                 nextItemPos += new Vector3(itemWidth, 0f, 0f);
             }
             else
@@ -100,7 +105,7 @@ public class Inventory : MonoBehaviour
 
     public void holdItem(GameObject item)
     {
-        if(held != null) { Destroy(held); }
+        if(held != null) { AddToInventory(held);  Destroy(held); }
 
         Vector3 newPos = new Vector3(
             GetComponentInParent<Canvas>().pixelRect.width - itemWidth,
@@ -110,13 +115,10 @@ public class Inventory : MonoBehaviour
         held = Instantiate(item, newPos, Quaternion.Euler(0,180,0), this.transform);
         held.transform.localScale *= 2;
         closeInventory();
-        //held.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-        //held.layer = 0;
-        //held.AddComponent<ObjectMovement>();
+
         held.GetComponent<Collider>().enabled = false;
         held.transform.rotation = Quaternion.Euler(0, 180, 0);
-        //RemoveFromInventory(held);
-        //held.GetComponent<BoxCollider>().enabled = false;
+        RemoveFromInventory(held);
     }
 
     public void itemsDisplayUpdate()
@@ -129,7 +131,7 @@ public class Inventory : MonoBehaviour
         GameObject itemAdd = getItemInTotal(instance);
         if(itemAdd != null)
         {
-            itemsShown.Add(itemAdd);
+            totalItems.Add(itemAdd.name);
         }
         //itemsDisplay(itemsShown.ToArray());
     }
@@ -142,18 +144,18 @@ public class Inventory : MonoBehaviour
             GameObject itemDelete = getItemInInventory(instance);
             if(itemDelete != null)
             {
-                itemsShown.Remove(itemDelete);
-                Destroy(itemDelete);
+                totalItems.Remove(itemDelete.name);
+                //Destroy(itemDelete);
                 //Debug.Log(itemsShown.Count);
             }
         }
-        //itemsDisplay(itemsShown.ToArray());
     }
 
     public void openInventory()
     {
         GetComponent<Image>().enabled = true;
         itemsDisplay(totalItems);
+        //itemsDisplay(itemsShown.ToArray());
         inventoryOpen = true;
 
         if(held != null)
@@ -195,14 +197,20 @@ public class Inventory : MonoBehaviour
         char separator = '(';
         int indexOfSeparator = held.name.IndexOf(separator);
         string heldName = held.name.Substring(0, indexOfSeparator);
-        for (int i = 0; i < itemsShown.Count; i++)
+        bool have = false;
+        for (int i = 0; i < totalItems.Count; i++)
         {
-            indexOfSeparator = itemsShown[i].name.IndexOf(separator);
-            string itemName = itemsShown[i].name.Substring(0, indexOfSeparator);
-            if (itemName == heldName)
+           
+            if (totalItems[i] == heldName)
             {
-                return itemsShown[i];
+                have = true;
+                break;
             }
+        }
+        if(!have) return null;
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (items[i].name == heldName) { return items[i]; }
         }
         return null;
     }
@@ -212,6 +220,26 @@ public class Inventory : MonoBehaviour
         char separator = '(';
         int indexOfSeparator = held.name.IndexOf(separator);
         string heldName = held.name.Substring(0, indexOfSeparator);
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (items[i].name == heldName)
+            {
+                return items[i];
+            }
+        }
+        return null;
+    }
+
+    GameObject getItemByName(string name)
+    {
+        char separator = '(';
+        int indexOfSeparator = name.IndexOf(separator);
+        string heldName;
+        if (indexOfSeparator != -1)
+        {
+            heldName = name.Substring(0, indexOfSeparator);
+        }
+        else heldName = name;
         for (int i = 0; i < items.Length; i++)
         {
             if (items[i].name == heldName)

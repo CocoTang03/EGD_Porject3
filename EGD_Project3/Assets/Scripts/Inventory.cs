@@ -44,7 +44,7 @@ public class Inventory : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Tab))
+        if(Input.GetKeyDown(KeyCode.Tab) && detailedItem == null)
         {
             Debug.Log("Tab Detect");
             if(inventoryOpen)
@@ -260,10 +260,9 @@ public class Inventory : MonoBehaviour
     {
         detailModel.GetComponent<Image>().enabled = true;
         Canvas canvas = GetComponentInParent<Canvas>();
-        itemWidth = canvas.pixelRect.width / 2;
-        itemHeight = canvas.pixelRect.height / 2;
-        Vector3 showPos = new Vector3(itemWidth, itemHeight, itemDepth/2);
+        Vector3 showPos = new Vector3(canvas.pixelRect.width / 2, canvas.pixelRect.height / 2, 5f); ;
         showPos = canvasCamera.ScreenToWorldPoint(showPos);
+        //showPos.z = -2f;
         detailedItem = Instantiate(
             getItemByName(held.name), 
             showPos,

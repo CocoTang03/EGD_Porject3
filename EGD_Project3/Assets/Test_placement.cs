@@ -17,19 +17,7 @@ public class Test_placement : MonoBehaviour
             // For combined bounds of all the meshes in the targetObject
             Bounds combinedBounds = new Bounds(targetObject.transform.position, Vector3.zero);
 
-            // Logic for dealing with objects with child meshes
-            if (targetObject.transform.childCount > 0)
-            {
-                MeshFilter[] mfs = targetObject.GetComponentsInChildren<MeshFilter>();
-
-                foreach (MeshFilter mf in mfs)
-                {
-                    combinedBounds.Encapsulate(mf.mesh.bounds);
-                }
-            }
-            // Logic for ferris wheel
-            else
-                combinedBounds.Encapsulate(targetObject.GetComponent<MeshFilter>().mesh.bounds);
+            combinedBounds.Encapsulate(targetObject.GetComponent<MeshFilter>().mesh.bounds);
 
             // Recalculate object size
             Vector3 scaleFactor = Vector3.one;

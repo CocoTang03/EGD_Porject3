@@ -48,6 +48,7 @@ public class CameraController : MonoBehaviour
         RaycastHit hit;
         if(Physics.Raycast(rayOrigin,playCam.transform.forward, out hit, range)) 
         {
+            //Debug.Log(hit.collider.name);
             if(hit.collider.tag == "itemPosition")
             {
                 //hit.collider.GetComponent<script>().func;
